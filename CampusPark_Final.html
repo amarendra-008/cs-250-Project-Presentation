@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusPark – CS 250 Midterm Presentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --p:#4F46E5;--pl:#818cf8;--pd:#3730a3;
+  --g:#22C55E;--a:#F59E0B;--r:#EF4444;--pu:#a855f7;
+  --bg:#07060e;--s:rgba(255,255,255,0.05);--b:rgba(255,255,255,0.10);
+  --t:#fff;--tm:#8b92a5;--ts:#5c6475;--cx:#a0a8b8;--mono:'Space Mono',monospace
+}
+html,body{height:100%;font-family:'Geist',sans-serif;background:var(--bg);color:var(--t);overflow:hidden;user-select:none}
+.bg{position:fixed;inset:0;z-index:0;background:#07060e}
+.grid{position:fixed;inset:0;z-index:0;opacity:.018;
+  background-image:linear-gradient(rgba(148,163,184,1) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,1) 1px,transparent 1px);
+  background-size:60px 60px}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);z-index:0;pointer-events:none;animation:orbFloat 18s ease-in-out infinite alternate}
+.orb1{width:700px;height:700px;background:rgba(79,70,229,.07);top:-250px;left:-250px}
+.orb2{width:600px;height:600px;background:rgba(99,102,241,.05);bottom:-200px;right:-200px;animation-delay:-9s}
+.orb3{width:400px;height:400px;background:rgba(79,70,229,.04);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-4s}
+@keyframes orbFloat{0%{transform:translate(0,0) scale(1)}100%{transform:translate(30px,20px) scale(1.05)}}
+#pres{position:relative;width:100vw;height:100vh;z-index:1}
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  padding:0 80px;opacity:0;pointer-events:none;
+  transition:opacity .5s cubic-bezier(.4,0,.2,1),transform .5s cubic-bezier(.4,0,.2,1);
+  transform:translateY(20px) scale(.99)}
+.slide.active{opacity:1;pointer-events:all;transform:translateY(0) scale(1)}
+.slide.exit-up{opacity:0;transform:translateY(-20px) scale(.99)}
+.slide.active .a1{animation:fadeUp .55s .05s both}
+.slide.active .a2{animation:fadeUp .55s .12s both}
+.slide.active .a3{animation:fadeUp .55s .19s both}
+.slide.active .a4{animation:fadeUp .55s .26s both}
+.slide.active .a5{animation:fadeUp .55s .33s both}
+.slide.active .a6{animation:fadeUp .55s .40s both}
+.slide.active .a7{animation:fadeUp .55s .47s both}
+.slide.active .a8{animation:fadeUp .55s .54s both}
+.slide.active .fromL{animation:fromLeft .55s .15s both}
+.slide.active .fromR{animation:fromRight .55s .15s both}
+.slide.active .scaleIn{animation:scaleIn .5s .08s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fromLeft{from{opacity:0;transform:translateX(-36px)}to{opacity:1;transform:translateX(0)}}
+@keyframes fromRight{from{opacity:0;transform:translateX(36px)}to{opacity:1;transform:translateX(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes borderGlow{0%,100%{box-shadow:0 0 0 1px #555,0 30px 80px rgba(0,0,0,.8),0 0 40px rgba(60,60,62,.5),inset 0 1px 0 rgba(255,255,255,.10)}50%{box-shadow:0 0 0 1px #6a6a6e,0 30px 80px rgba(0,0,0,.8),0 0 50px rgba(79,70,229,.12),inset 0 1px 0 rgba(255,255,255,.16)}}
+@keyframes diBreath{0%,100%{box-shadow:0 0 0 1px rgba(255,255,255,.06)}50%{box-shadow:0 0 6px rgba(100,116,139,.25)}}
+@keyframes chipShimmer{0%{transform:translateX(-100%)}45%,100%{transform:translateX(200%)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.nav-btn{position:fixed;top:50%;transform:translateY(-50%);z-index:100;
+  width:46px;height:46px;border-radius:50%;border:1px solid var(--b);
+  background:rgba(255,255,255,.07);backdrop-filter:blur(10px);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;font-size:17px;color:var(--t)}
+.nav-btn:hover{background:rgba(79,70,229,.3);border-color:var(--pl);transform:translateY(-50%) scale(1.08)}
+#prev{left:20px}#next{right:20px}
+#dots{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:100}
+.dot{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.22);transition:all .3s;cursor:pointer}
+.dot.active{width:22px;background:var(--p)}
+#slide-counter{position:fixed;bottom:20px;right:28px;z-index:100;
+  font-size:10px;color:var(--cx);letter-spacing:1px;font-family:var(--mono)}
+.slide-label{position:fixed;top:22px;left:50%;transform:translateX(-50%);
+  z-index:100;font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--cx);font-family:var(--mono)}
+
+/* ── SHARED ── */
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;
+  font-size:11px;font-weight:600;letter-spacing:.4px;position:relative;overflow:hidden}
+.chip::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
+  transform:translateX(-100%);animation:chipShimmer 4s ease-in-out infinite}
+.chip-p{background:rgba(79,70,229,.22);color:var(--pl);border:1px solid rgba(79,70,229,.38)}
+.chip-g{background:rgba(34,197,94,.18);color:#4ade80;border:1px solid rgba(34,197,94,.32)}
+.chip-a{background:rgba(245,158,11,.18);color:#fbbf24;border:1px solid rgba(245,158,11,.32)}
+.chip-r{background:rgba(239,68,68,.18);color:#f87171;border:1px solid rgba(239,68,68,.32)}
+.chip-pu{background:rgba(168,85,247,.18);color:#c084fc;border:1px solid rgba(168,85,247,.32)}
+.card{background:var(--s);border:1px solid var(--b);border-radius:14px;padding:18px;backdrop-filter:blur(10px)}
+.sec-label{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--pl);font-family:var(--mono);font-weight:700}
+.slide-h{font-size:52px;font-weight:800;color:#fff;line-height:1.05;letter-spacing:-1.5px}
+.slide-sub{font-size:17px;color:var(--tm);font-weight:400;line-height:1.55}
+.hl{color:var(--pl)}
+
+/* ── TWO-COL LAYOUT ── */
+.two-col{display:flex;gap:56px;align-items:flex-start;width:100%;max-width:1100px}
+.col{flex:1;display:flex;flex-direction:column;gap:18px}
+
+/* ── STAT CARDS ── */
+.stat-row{display:flex;gap:16px;margin-top:4px}
+.stat-card{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:18px 16px;display:flex;flex-direction:column;gap:4px}
+.stat-num{font-size:32px;font-weight:800;color:#fff;letter-spacing:-1px}
+.stat-lbl{font-size:11px;color:var(--tm);font-weight:500;letter-spacing:.3px}
+
+/* ── INSIGHT TABLE ── */
+.insight-row{display:flex;gap:0;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.07);margin-bottom:8px}
+.insight-left{flex:0 0 220px;background:rgba(79,70,229,.1);padding:12px 16px;
+  font-size:12.5px;color:var(--pl);font-weight:600;line-height:1.45;border-right:1px solid rgba(79,70,229,.2)}
+.insight-right{flex:1;background:rgba(255,255,255,.03);padding:12px 16px;
+  font-size:12.5px;color:var(--cx);line-height:1.45}
+
+/* ── SPRINT TABLE ── */
+.sprint-table{width:100%;border-collapse:collapse;font-size:13px}
+.sprint-table th{background:rgba(79,70,229,.15);color:var(--pl);font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid rgba(79,70,229,.2)}
+.sprint-table td{padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.05);color:var(--cx);vertical-align:top}
+.sprint-table tr:last-child td{border-bottom:none}
+.sprint-table td:first-child{color:#e8eaf6;font-weight:600}
+.done{color:#4ade80}
+.pending{color:#fbbf24}
+.future{color:var(--tm)}
+.dot-done{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4ade80;margin-right:6px}
+.dot-pending{display:inline-block;width:7px;height:7px;border-radius:50%;background:#fbbf24;margin-right:6px}
+.dot-future{display:inline-block;width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.25);margin-right:6px}
+
+/* ── FEATURE STATUS TABLE ── */
+.feat-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.feat-table th{background:rgba(255,255,255,.04);color:var(--tm);font-size:9.5px;letter-spacing:1.5px;
+  text-transform:uppercase;padding:8px 14px;text-align:left;border-bottom:1px solid rgba(255,255,255,.07)}
+.feat-table td{padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--cx);vertical-align:middle}
+.feat-table tr:last-child td{border-bottom:none}
+.feat-table td:first-child{color:#e8eaf6;font-weight:500}
+.status-done{display:inline-flex;align-items:center;gap:5px;color:#4ade80;font-size:11px;font-weight:600}
+.status-pending{display:inline-flex;align-items:center;gap:5px;color:#fbbf24;font-size:11px;font-weight:600}
+.status-future{display:inline-flex;align-items:center;gap:5px;color:var(--tm);font-size:11px;font-weight:600}
+
+/* ── PHONE FRAME ── */
+.phone{width:200px;height:420px;background:#0d0d10;border-radius:44px;
+  border:7px solid #3c3c3e;position:relative;overflow:hidden;flex-shrink:0;
+  box-shadow:0 0 0 1px #555,0 30px 80px rgba(0,0,0,.8),0 0 50px rgba(79,70,229,.15),
+  inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.5);
+  animation:float 5s ease-in-out infinite,borderGlow 8s ease-in-out infinite}
+.phone::before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);
+  width:60px;height:22px;background:#080808;border-radius:11px;z-index:50;
+  box-shadow:0 0 0 1px rgba(255,255,255,.05);animation:diBreath 4s ease-in-out infinite}
+.phone::after{content:'';position:absolute;bottom:6px;left:50%;transform:translateX(-50%);
+  width:72px;height:4px;background:rgba(255,255,255,.22);border-radius:3px;z-index:50}
+.phone-screen{position:absolute;inset:0;border-radius:37px;overflow:hidden;display:flex;flex-direction:column}
+.phone-sb{height:40px;display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px 0 18px;font-size:7.5px;font-weight:700;flex-shrink:0;color:rgba(255,255,255,.85)}
+/* login screen */
+.scr-login{background:linear-gradient(175deg,#1a1230 0%,#0d0818 100%)}
+.scr-login .bg-glow{position:absolute;inset:0;background:
+  radial-gradient(ellipse at 30% 20%,rgba(79,70,229,.22) 0%,transparent 55%),
+  radial-gradient(ellipse at 70% 80%,rgba(168,85,247,.12) 0%,transparent 55%);pointer-events:none}
+.scr-login .cnt{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;
+  padding:14px 12px 12px;flex:1;justify-content:center;gap:7px}
+.logo-ph{font-size:20px;font-weight:900;letter-spacing:-0.5px;color:#fff}
+.logo-ph span{color:#4F46E5}
+.tag-ph{font-size:7px;color:rgba(255,255,255,.55);letter-spacing:.3px;margin-bottom:4px}
+.dd-ph{width:100%;padding:8px 10px;border-radius:9px;font-size:7.5px;
+  display:flex;justify-content:space-between;align-items:center;color:rgba(255,255,255,.55)}
+.dd-ph.empty{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16)}
+.dd-ph.filled{background:rgba(79,70,229,.18);border:1px solid rgba(79,70,229,.45);color:var(--pl);font-weight:600}
+.btn-ph{width:100%;padding:9px;border-radius:9px;background:#4F46E5;
+  font-size:8px;font-weight:700;color:#fff;text-align:center;margin-top:4px;letter-spacing:.4px}
+.lbl-ph{font-size:7px;font-weight:700;color:var(--pl);letter-spacing:1.2px;text-transform:uppercase;align-self:flex-start}
+/* home screen */
+.scr-home{background:#0d0818}
+.home-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse at 20% 10%,rgba(79,70,229,.12) 0%,transparent 50%),
+  radial-gradient(ellipse at 80% 90%,rgba(168,85,247,.08) 0%,transparent 50%);pointer-events:none}
+.home-hdr{position:relative;z-index:1;background:rgba(10,8,24,.92);padding:6px 10px;display:flex;
+  justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.07)}
+.home-title{font-size:7.5px;font-weight:700}
+.home-icons{display:flex;gap:4px}
+.h-icon{width:20px;height:20px;border-radius:7px;background:rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:center;font-size:8px;position:relative}
+.h-badge{position:absolute;top:-2px;right:-2px;width:9px;height:9px;border-radius:5px;
+  background:#EF4444;font-size:5px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;border:1px solid #0d0818}
+.ps-list{position:relative;z-index:1;flex:1;overflow:hidden;padding:5px;display:flex;flex-direction:column;gap:4px}
+.ps-card{background:rgba(255,255,255,.045);border-radius:9px;padding:7px 9px;border:1px solid rgba(255,255,255,.07)}
+.ps-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.ps-id{width:24px;height:18px;border-radius:5px;background:#4F46E5;
+  font-size:6px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.ps-st{font-size:6px;font-weight:700;padding:2px 5px;border-radius:7px}
+.av{background:rgba(34,197,94,.18);color:#4ade80}
+.li{background:rgba(245,158,11,.18);color:#fbbf24}
+.fu{background:rgba(239,68,68,.18);color:#f87171}
+.ps-loc{font-size:5.5px;color:rgba(255,255,255,.45);margin-bottom:3px}
+.bar-track{height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin-bottom:2px;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px}
+.ps-cnt{font-size:5px;color:rgba(255,255,255,.4)}
+/* alerts screen */
+.scr-alerts{background:#0d0818}
+.al-hdr{position:relative;z-index:1;background:rgba(10,8,24,.92);padding:6px 10px;display:flex;
+  justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.07)}
+.al-title{font-size:9px;font-weight:700}
+.al-mark{font-size:6px;color:var(--pl);font-weight:600}
+.al-tabs{display:flex;margin:5px 8px;background:rgba(255,255,255,.05);border-radius:9px;padding:3px;position:relative}
+.al-tab{flex:1;padding:4px 0;text-align:center;font-size:6.5px;font-weight:600;
+  color:rgba(255,255,255,.4);z-index:1;position:relative}
+.al-tab.active{color:#fff}
+.al-pill{position:absolute;top:3px;bottom:3px;left:3px;background:#4F46E5;border-radius:6px;transition:all .3s}
+.al-list{flex:1;overflow:hidden;padding:4px 7px;display:flex;flex-direction:column;gap:3px}
+.al-card{background:rgba(255,255,255,.035);border-radius:8px;padding:6px 8px;
+  border:1px solid rgba(255,255,255,.06);display:flex;gap:5px;align-items:flex-start;position:relative}
+.al-card.unread{border-left:2px solid #4F46E5;background:rgba(255,255,255,.055)}
+.al-icon{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px}
+.al-text .ttl{font-size:6.5px;font-weight:600;margin-bottom:1px}
+.al-text .bdy{font-size:5.5px;color:rgba(255,255,255,.45);line-height:1.4}
+.al-udot{position:absolute;top:5px;right:6px;width:5px;height:5px;border-radius:50%;background:var(--pl)}
+/* history screen */
+.scr-history{background:#0d0818}
+.hi-hdr{position:relative;z-index:1;background:rgba(10,8,24,.92);padding:6px 10px;display:flex;
+  align-items:center;gap:6px;border-bottom:1px solid rgba(255,255,255,.07)}
+.hi-back{width:18px;height:18px;border-radius:6px;background:rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;font-size:8px}
+.hi-title{font-size:9px;font-weight:700}
+.hi-tabs{display:flex;margin:5px 8px;background:rgba(255,255,255,.05);border-radius:9px;padding:3px;position:relative}
+.hi-tab{flex:1;padding:4px 0;text-align:center;font-size:6.5px;font-weight:600;color:rgba(255,255,255,.4);z-index:1}
+.hi-tab.active{color:#fff}
+.hi-pill{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);background:#4F46E5;border-radius:6px}
+.hi-list{flex:1;overflow:hidden;padding:4px 7px;display:flex;flex-direction:column;gap:4px}
+.hi-card{background:rgba(255,255,255,.04);border-radius:8px;padding:7px 9px;border:1px solid rgba(255,255,255,.07)}
+.hi-top{display:flex;align-items:center;gap:5px;margin-bottom:3px}
+.hi-id{width:24px;height:18px;border-radius:5px;background:#4F46E5;font-size:6px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.hi-date{font-size:5.5px;color:rgba(255,255,255,.4);flex:1}
+.hi-dur{font-size:5px;font-weight:700;color:var(--pl);background:rgba(79,70,229,.15);padding:1px 5px;border-radius:6px}
+.hi-name{font-size:6.5px;font-weight:600;margin-bottom:1px}
+.hi-loc{font-size:5.5px;color:rgba(255,255,255,.38);margin-bottom:4px}
+.hi-divider{height:1px;background:rgba(255,255,255,.05);margin-bottom:4px}
+.hi-times{display:flex;gap:8px}
+.hi-t-lbl{font-size:5px;color:rgba(255,255,255,.38);margin-bottom:1px}
+.hi-t-val{font-size:6.5px;font-weight:700;color:rgba(255,255,255,.85)}
+
+/* ── ARCH DIAGRAM ── */
+.arch-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;
+  padding:14px 18px;text-align:center;position:relative}
+.arch-box.primary{border-color:rgba(79,70,229,.35);background:rgba(79,70,229,.08)}
+.arch-box.warn{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.06)}
+.arch-title{font-size:12px;font-weight:700;color:#e8eaf6;margin-bottom:4px}
+.arch-sub{font-size:10.5px;color:var(--tm)}
+.arch-arrow{display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-size:18px;padding:2px 0}
+
+/* ── TEAM GRID ── */
+.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:900px}
+.team-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 22px}
+.team-avatar{width:44px;height:44px;border-radius:22px;background:var(--p);display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:800;color:#fff;margin-bottom:12px;border:2px solid rgba(79,70,229,.4)}
+.team-name{font-size:16px;font-weight:700;color:#fff;margin-bottom:2px}
+.team-role{font-size:11px;color:var(--pl);font-weight:600;letter-spacing:.4px;margin-bottom:12px}
+.team-bullets{display:flex;flex-direction:column;gap:5px}
+.team-bullet{font-size:11.5px;color:var(--cx);line-height:1.4;display:flex;gap:7px}
+.team-bullet::before{content:'›';color:rgba(79,70,229,.5);flex-shrink:0}
+
+/* ── SPRINT CARDS ── */
+.sprint-cards{display:flex;gap:14px;width:100%}
+.sprint-card{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px}
+.sprint-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sprint-title{font-size:15px;font-weight:700;color:#fff}
+.sprint-weeks{font-size:10px;color:var(--tm);font-family:var(--mono)}
+.sprint-section{margin-bottom:12px}
+.sprint-section-title{font-size:9px;letter-spacing:1.8px;text-transform:uppercase;
+  font-weight:700;margin-bottom:7px;font-family:var(--mono)}
+.sprint-item{font-size:12px;color:var(--cx);line-height:1.5;display:flex;gap:8px;margin-bottom:4px}
+.sprint-item::before{content:'›';color:var(--pl);flex-shrink:0}
+.drift-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:13px;padding:14px 18px;margin-bottom:10px}
+.drift-from{font-size:11px;color:var(--tm);text-decoration:line-through;margin-bottom:3px}
+.drift-to{font-size:12.5px;color:var(--cx);margin-bottom:4px}
+.drift-reason{font-size:11px;color:var(--pl);font-style:italic}
+
+/* ── USER TESTING ── */
+.obs-card{background:rgba(255,255,255,.04);border-left:3px solid rgba(79,70,229,.5);border-radius:0 12px 12px 0;
+  padding:12px 16px;margin-bottom:8px;border-top:1px solid rgba(255,255,255,.06);border-right:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+.obs-title{font-size:12.5px;font-weight:600;color:#e8eaf6;margin-bottom:3px}
+.obs-body{font-size:12px;color:var(--cx);line-height:1.5}
+.obs-change{font-size:11px;color:#4ade80;margin-top:4px;font-style:italic}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<div id="pres">
+
+<!-- ═══ SLIDE 1: COVER ═══ -->
+<div class="slide active" data-title="CS 250 · Midterm Presentation">
+  <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px;max-width:800px">
+    <div class="a1">
+      <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--pl);font-family:var(--mono);margin-bottom:16px">CS 250 · San Diego State University · Spring 2026</div>
+      <div style="font-size:88px;font-weight:900;letter-spacing:-3px;line-height:.9;color:#fff">Campus<span style="color:var(--p)">Park</span></div>
+    </div>
+    <div class="a2" style="font-size:20px;color:var(--tm);font-weight:300;max-width:480px;line-height:1.5">
+      Real-time parking availability for SDSU students
+    </div>
+    <div class="a3" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+      <span class="chip chip-p">Amarendra Mishra</span>
+      <span class="chip chip-p">Carlos Gans</span>
+      <span class="chip chip-p">Charlie McMahon</span>
+      <span class="chip chip-p">Miguel Balderas</span>
+    </div>
+    <div class="a4" style="display:flex;gap:20px;margin-top:12px">
+      <span class="chip chip-g">React Native + Expo</span>
+      <span class="chip chip-a">Kanban · Continuous Dev</span>
+      <span class="chip chip-pu">MVP Delivered</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 2: PROBLEM DEFINITION & STAKEHOLDERS ═══ -->
+<div class="slide" data-title="Problem & Stakeholders">
+  <div style="display:flex;flex-direction:column;gap:16px;width:100%;max-width:1100px">
+    <div class="a1" style="display:flex;align-items:baseline;gap:20px">
+      <div>
+        <div class="sec-label" style="margin-bottom:8px">01 · Problem Definition &amp; Stakeholders</div>
+        <div class="slide-h" style="font-size:42px">Why campus parking <span class="hl">needs a fix.</span></div>
+      </div>
+    </div>
+    <div class="a2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+      <!-- LEFT: PROBLEMS -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--r);font-family:var(--mono);font-weight:700;margin-bottom:2px">The Problems</div>
+        <div class="card" style="border-color:rgba(239,68,68,.2);background:rgba(239,68,68,.04);padding:14px 16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <div style="width:28px;height:28px;border-radius:8px;background:rgba(239,68,68,.18);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#f87171;flex-shrink:0">01</div>
+            <div style="font-size:13px;font-weight:700;color:#fff">Parking on campus is difficult</div>
+          </div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.55;padding-left:38px">SDSU has 35,000+ students competing for ~2,590 spots across 8 structures. With no unified real-time system, students have no way to know where space is available before they even leave home.</div>
+        </div>
+        <div class="card" style="border-color:rgba(239,68,68,.2);background:rgba(239,68,68,.04);padding:14px 16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <div style="width:28px;height:28px;border-radius:8px;background:rgba(239,68,68,.18);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#f87171;flex-shrink:0">02</div>
+            <div style="font-size:13px;font-weight:700;color:#fff">Students waste time searching</div>
+          </div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.55;padding-left:38px">Drivers circle structure levels or visit multiple lots before finding a spot. During peak hours (8–10am), this can burn 15–20 minutes per person, every single school day.</div>
+        </div>
+        <div class="card" style="border-color:rgba(239,68,68,.2);background:rgba(239,68,68,.04);padding:14px 16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <div style="width:28px;height:28px;border-radius:8px;background:rgba(239,68,68,.18);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#f87171;flex-shrink:0">03</div>
+            <div style="font-size:13px;font-weight:700;color:#fff">Causes stress and lateness</div>
+          </div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.55;padding-left:38px">Arriving late to class due to parking uncertainty is a recurring stressor for commuter students. It affects academic performance, raises anxiety, and erodes the campus experience.</div>
+        </div>
+        <div class="card" style="border-color:rgba(239,68,68,.2);background:rgba(239,68,68,.04);padding:14px 16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <div style="width:28px;height:28px;border-radius:8px;background:rgba(239,68,68,.18);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#f87171;flex-shrink:0">04</div>
+            <div style="font-size:13px;font-weight:700;color:#fff">Increases traffic congestion</div>
+          </div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.55;padding-left:38px">Uninformed drivers looping through structures and campus roads create unnecessary vehicle volume, slowing down everyone and worsening bottlenecks on College Ave and Montezuma Rd.</div>
+        </div>
+      </div>
+      <!-- RIGHT: STAKEHOLDERS -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--pl);font-family:var(--mono);font-weight:700;margin-bottom:2px">Stakeholders</div>
+        <div class="card" style="border-color:rgba(79,70,229,.3);background:rgba(79,70,229,.07);padding:16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <div style="width:34px;height:34px;border-radius:10px;background:rgba(79,70,229,.25);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--pl);flex-shrink:0">ST</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#fff">Students</div>
+              <div style="font-size:10.5px;color:var(--pl);letter-spacing:.3px">Primary users · highest impact</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.55">Both commuters and on-campus residents. Commuters need real-time availability before they leave home. Residential students use community-specific alerts and the crowd-report feature to keep data fresh for peers.</div>
+        </div>
+        <div class="card" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.05);padding:16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <div style="width:34px;height:34px;border-radius:10px;background:rgba(245,158,11,.18);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fbbf24;flex-shrink:0">FS</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#fff">Faculty &amp; Staff</div>
+              <div style="font-size:10.5px;color:#fbbf24;letter-spacing:.3px">Secondary users · permit holders</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.55">Professors and staff hold dedicated permits but still face lot closures during events, maintenance, or permit zone changes. They benefit from proactive alerts and reliable structure-level status before commuting to campus.</div>
+        </div>
+        <div class="card" style="border-color:rgba(34,197,94,.25);background:rgba(34,197,94,.05);padding:16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <div style="width:34px;height:34px;border-radius:10px;background:rgba(34,197,94,.2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#4ade80;flex-shrink:0">DV</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#fff">Developers (Our Team)</div>
+              <div style="font-size:10.5px;color:#4ade80;letter-spacing:.3px">CS 250 team · proxy users</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.55">All 4 team members are SDSU students who park on campus. We are not building for a hypothetical user. We experience the problem ourselves every week, which means requirements come directly from lived frustration, not assumptions.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 3: SOLUTION ═══ -->
+<div class="slide" data-title="Our Solution">
+  <div style="display:flex;flex-direction:column;gap:20px;width:100%;max-width:1100px">
+    <div class="a1">
+      <div class="sec-label" style="margin-bottom:10px">02 · Our Solution</div>
+      <div class="slide-h" style="font-size:44px">CampusPark: the app that <span class="hl">ends the guessing.</span></div>
+    </div>
+    <div class="a2 slide-sub" style="max-width:700px;font-size:15px">
+      A React Native mobile app built specifically for SDSU that gives students and faculty real-time parking intelligence, powered by the campus community itself.
+    </div>
+    <div class="a3" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+      <!-- PILLAR 1 -->
+      <div class="card" style="border-color:rgba(79,70,229,.3);background:rgba(79,70,229,.07);padding:20px;display:flex;flex-direction:column;gap:12px">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(79,70,229,.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--pl);letter-spacing:.5px">APP</div>
+        <div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:6px">Mobile App for Real-Time Parking</div>
+          <div style="font-size:12.5px;color:var(--cx);line-height:1.6">CampusPark shows live availability across all 8 SDSU parking structures with color-coded status: green (open), yellow (filling), red (full). Students select their campus and residential community at login, so the home screen surfaces the lots most relevant to them. No more blind guessing before you leave the house.</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto">
+          <span class="chip chip-p">Live spot counts</span>
+          <span class="chip chip-p">8 structures</span>
+          <span class="chip chip-p">React Native</span>
+        </div>
+      </div>
+      <!-- PILLAR 2 -->
+      <div class="card" style="border-color:rgba(34,197,94,.25);background:rgba(34,197,94,.05);padding:20px;display:flex;flex-direction:column;gap:12px">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(34,197,94,.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#4ade80;letter-spacing:.5px">RPT</div>
+        <div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:6px">Crowd-Sourced User Reports</div>
+          <div style="font-size:12.5px;color:var(--cx);line-height:1.6">When a student arrives or departs, they submit a one-tap report. These crowd-sourced updates flow into the Python/Flask REST API backend, which recalculates availability in real time. The more students use it, the more accurate it gets. A full report history lets users track their own contributions and review past sessions.</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto">
+          <span class="chip chip-g">Community-driven</span>
+          <span class="chip chip-g">REST API</span>
+          <span class="chip chip-g">History log</span>
+        </div>
+      </div>
+      <!-- PILLAR 3 -->
+      <div class="card" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.05);padding:20px;display:flex;flex-direction:column;gap:12px">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(245,158,11,.18);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fbbf24;letter-spacing:.5px">UX</div>
+        <div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:6px">Simple and Fast Interface</div>
+          <div style="font-size:12.5px;color:var(--cx);line-height:1.6">Designed for speed: the home screen loads structure cards instantly, the report modal takes two taps, and smart push alerts notify users before they even start their commute. Settings let users customize their notification preferences per structure. The interface is clean, readable in sunlight, and requires zero learning curve.</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto">
+          <span class="chip chip-a">Push alerts</span>
+          <span class="chip chip-a">2-tap reports</span>
+          <span class="chip chip-a">Zero friction</span>
+        </div>
+      </div>
+    </div>
+    <div class="a4" style="display:flex;align-items:center;gap:14px;padding:12px 18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px">
+      <div style="font-size:10px;color:var(--pl);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;font-family:var(--mono);white-space:nowrap">Stack</div>
+      <div style="font-size:12.5px;color:var(--cx);line-height:1.45">React Native + Expo (iOS/Android) · Python + Flask REST API · JSON data exchange · TypeScript frontend · Campus + community-aware session model</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 4: REQUIREMENTS GATHERING ═══ -->
+<div class="slide" data-title="Requirements Gathering">
+  <div style="display:flex;flex-direction:column;gap:18px;width:100%;max-width:1100px">
+    <div class="a1">
+      <div class="sec-label" style="margin-bottom:10px">02 · Requirements Gathering</div>
+      <div class="slide-h" style="font-size:44px">How we found out <span class="hl">what to build.</span></div>
+    </div>
+    <div class="a2 slide-sub" style="font-size:14.5px;max-width:700px">
+      Three methods. Two sources: real users and the team itself. No guesswork, every requirement came from something we heard, saw, or lived.
+    </div>
+    <div class="a3" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+      <!-- USER STORIES -->
+      <div class="card" style="border-color:rgba(79,70,229,.3);background:rgba(79,70,229,.07);padding:20px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(79,70,229,.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--pl)">US</div>
+          <div style="font-size:14px;font-weight:700;color:#fff">User Stories</div>
+        </div>
+        <div style="font-size:12.5px;color:var(--cx);line-height:1.6">Written before any code. Each story captured a real need in the format "As a [user], I want [thing], so that [reason]." Stories came directly from conversations with students, residential community members, and our own team as daily parking users.</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+          <div style="background:rgba(79,70,229,.12);border-radius:8px;padding:9px 12px;font-size:11.5px;color:#c7d2fe;font-style:italic;line-height:1.45">"As a commuter, I want to see open spots before I drive, so I don't waste 20 minutes circling."</div>
+          <div style="background:rgba(79,70,229,.12);border-radius:8px;padding:9px 12px;font-size:11.5px;color:#c7d2fe;font-style:italic;line-height:1.45">"As a resident, I want alerts near my dorm, not every structure on campus."</div>
+          <div style="background:rgba(79,70,229,.12);border-radius:8px;padding:9px 12px;font-size:11.5px;color:#c7d2fe;font-style:italic;line-height:1.45">"As a user, I want to flag wrong data so it stays accurate for everyone."</div>
+        </div>
+      </div>
+      <!-- PERSONAS -->
+      <div class="card" style="border-color:rgba(34,197,94,.25);background:rgba(34,197,94,.05);padding:20px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(34,197,94,.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#4ade80">PE</div>
+          <div style="font-size:14px;font-weight:700;color:#fff">Personas</div>
+        </div>
+        <div style="font-size:12.5px;color:var(--cx);line-height:1.6">Built three personas from observed patterns, not fictional archetypes. Each persona represented a real category of user the team had direct contact with. Personas kept the team aligned on who we were designing for during every feature decision.</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="width:26px;height:26px;border-radius:8px;background:rgba(79,70,229,.25);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--pl);flex-shrink:0">SC</div>
+            <div style="font-size:12px;color:var(--cx);line-height:1.45"><strong style="color:#e8eaf6">Student Commuter</strong>: drives daily, needs pre-trip data, peak-hour stress</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="width:26px;height:26px;border-radius:8px;background:rgba(34,197,94,.2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#4ade80;flex-shrink:0">RS</div>
+            <div style="font-size:12px;color:var(--cx);line-height:1.45"><strong style="color:#e8eaf6">Residential Student</strong>: on-campus, proximity-focused, frequent reporter</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="width:26px;height:26px;border-radius:8px;background:rgba(245,158,11,.18);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fbbf24;flex-shrink:0">FS</div>
+            <div style="font-size:12px;color:var(--cx);line-height:1.45"><strong style="color:#e8eaf6">Faculty / Staff</strong>: permit holder, needs event and maintenance alerts</div>
+          </div>
+        </div>
+      </div>
+      <!-- OBSERVATIONS -->
+      <div class="card" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.05);padding:20px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(245,158,11,.18);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fbbf24">OB</div>
+          <div style="font-size:14px;font-weight:700;color:#fff">Observations</div>
+        </div>
+        <div style="font-size:12.5px;color:var(--cx);line-height:1.6">Watched real students navigate peak-hour parking at PS1 and PS5. Observed wrong-turn corrections, circling behavior, and timing patterns. What people do under pressure reveals requirements that interviews miss.</div>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-top:4px">
+          <div style="display:flex;gap:8px;font-size:12px;color:var(--cx)"><span style="color:#fbbf24;flex-shrink:0">›</span> Students checked phones while driving, not before leaving</div>
+          <div style="display:flex;gap:8px;font-size:12px;color:var(--cx)"><span style="color:#fbbf24;flex-shrink:0">›</span> Most entered the closest structure first, regardless of posted signs</div>
+          <div style="display:flex;gap:8px;font-size:12px;color:var(--cx)"><span style="color:#fbbf24;flex-shrink:0">›</span> When a level looked full, drivers left the structure instead of going up</div>
+          <div style="display:flex;gap:8px;font-size:12px;color:var(--cx)"><span style="color:#fbbf24;flex-shrink:0">›</span> No one consulted the SDSU parking website in the field</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 5: WHAT WE LEARNED ═══ -->
+<div class="slide" data-title="Requirements Gathering">
+  <div style="display:flex;flex-direction:column;gap:18px;width:100%;max-width:1050px">
+    <div class="a1">
+      <div class="sec-label" style="margin-bottom:10px">02 · What We Learned</div>
+      <div class="slide-h" style="font-size:46px">Requirements from <span class="hl">three lenses.</span></div>
+    </div>
+    <div class="a2" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+      <!-- ACTUAL NEEDS -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--pl);font-family:var(--mono);font-weight:700;margin-bottom:2px">Actual Needs</div>
+        <div style="font-size:12px;color:var(--tm);line-height:1.5;margin-bottom:4px">What real users told us they needed, not what we assumed.</div>
+        <div class="card" style="padding:13px 15px">
+          <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px">Pre-trip data, not on-arrival</div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.5">Users don't want to know parking is full after they've driven there. The app must surface availability before they leave home.</div>
+        </div>
+        <div class="card" style="padding:13px 15px">
+          <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px">Community-scoped alerts</div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.5">Residential students don't need alerts for every structure. They need alerts for the two or three closest to where they live.</div>
+        </div>
+        <div class="card" style="padding:13px 15px">
+          <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px">One-tap reporting</div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.5">Users will only submit crowd reports if it takes seconds. Any more friction and they skip it, breaking the data loop.</div>
+        </div>
+      </div>
+      <!-- WORKFLOW UNDERSTANDING -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#4ade80;font-family:var(--mono);font-weight:700;margin-bottom:2px">Workflow Understanding</div>
+        <div style="font-size:12px;color:var(--tm);line-height:1.5;margin-bottom:4px">How the parking decision actually plays out, step by step.</div>
+        <div class="card" style="padding:13px 15px">
+          <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px">Decision happens before departure</div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.5">Students decide which structure to target while still at home or en route, not in the lot. The app must be fast to open and instantly readable.</div>
+        </div>
+        <div class="card" style="padding:13px 15px">
+          <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px">Visual status over numbers</div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.5">In observations, students glanced at their phones while moving. Color + bar was faster to process than reading a spot count number.</div>
+        </div>
+        <div class="card" style="padding:13px 15px">
+          <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px">Alerts and history serve different moments</div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.5">Alerts are consumed passively, before a trip. History is reviewed intentionally, after the fact. Separate tabs, separate UX patterns.</div>
+        </div>
+      </div>
+      <!-- INTERNAL CONSTRAINTS -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#fbbf24;font-family:var(--mono);font-weight:700;margin-bottom:2px">Internal Constraints</div>
+        <div style="font-size:12px;color:var(--tm);line-height:1.5;margin-bottom:4px">Limits that shaped scope and technical decisions.</div>
+        <div class="card" style="padding:13px 15px">
+          <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px">No access to SDSU sensor data</div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.5">No API or feed from SDSU's parking system. All real-time data must come from crowd reports. This made the reporting flow a core feature, not a nice-to-have.</div>
+        </div>
+        <div class="card" style="padding:13px 15px">
+          <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px">Mock data as placeholder</div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.5">Backend not yet connected to frontend at MVP stage. TypeScript mock arrays used to validate UX before live data was wired in.</div>
+        </div>
+        <div class="card" style="padding:13px 15px">
+          <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px">4-person team, shared workload</div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.5">Each feature was evaluated against team capacity. If it couldn't be built well in scope, it was moved to To Do on the Kanban board rather than cut entirely.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 6: KANBAN FRAMEWORK ═══ -->
+<div class="slide" data-title="Development Process">
+  <div class="two-col" style="align-items:flex-start">
+    <div class="col">
+      <div class="a1">
+        <div class="sec-label" style="margin-bottom:10px">03 · Development Process</div>
+        <div class="slide-h" style="font-size:44px">How we built with <span class="hl">Kanban.</span></div>
+      </div>
+      <div class="a2 slide-sub" style="font-size:14.5px;max-width:400px">
+        Continuous development with a visual task board. No fixed sprints, just steady progress through a shared To Do / In Progress / Done workflow.
+      </div>
+      <div class="a3" style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+        <div class="card" style="padding:14px 16px">
+          <div style="font-size:12px;font-weight:700;color:var(--pl);margin-bottom:5px">Why Kanban?</div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.5">As a 4-person student team, fixed sprint deadlines would have added overhead without benefit. Kanban let us pull new tasks as capacity opened, respond to scope changes immediately, and stay focused on finishing work rather than planning cycles.</div>
+        </div>
+        <div class="card" style="padding:14px 16px">
+          <div style="font-size:12px;font-weight:700;color:var(--pl);margin-bottom:5px">How We Ran It</div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.5">Each feature or screen was a card. Cards moved left to right: To Do when identified, In Progress when picked up, Done when merged and working. No card moved to Done unless it was functional and visible in the app.</div>
+        </div>
+        <div class="card" style="padding:14px 16px">
+          <div style="font-size:12px;font-weight:700;color:var(--pl);margin-bottom:5px">Team Coordination</div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.5">Each team member owned their In Progress cards. Check-ins happened naturally around blockers, not on a fixed cadence. This kept communication lightweight and let parallel work streams (frontend + backend) move independently.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col a4">
+      <div style="font-size:11px;color:var(--pl);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;font-family:var(--mono)">Core Principles</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:rgba(79,70,229,.07);border:1px solid rgba(79,70,229,.22);border-radius:11px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(79,70,229,.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--pl);flex-shrink:0">01</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:4px">Continuous Development</div>
+            <div style="font-size:12px;color:var(--cx);line-height:1.45">Work flows without time-boxed boundaries. Features ship as they are finished, not when a sprint ends. This matched the pace of a fast-moving class project.</div>
+          </div>
+        </div>
+        <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:11px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(34,197,94,.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#4ade80;flex-shrink:0">02</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:4px">Visualize the Workflow</div>
+            <div style="font-size:12px;color:var(--cx);line-height:1.45">The task board made work-in-progress visible to the whole team. Everyone could see what was blocked, what was moving, and where help was needed without a meeting.</div>
+          </div>
+        </div>
+        <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:11px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(245,158,11,.18);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fbbf24;flex-shrink:0">03</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:4px">Focus on Completion</div>
+            <div style="font-size:12px;color:var(--cx);line-height:1.45">Starting a new task before finishing an existing one was avoided. The goal was always to move cards to Done, keeping the board clean and the app stable at every checkpoint.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 7: KANBAN BOARD ═══ -->
+<div class="slide" data-title="Development Process">
+  <div style="display:flex;flex-direction:column;gap:18px;width:100%;max-width:1100px">
+    <div class="a1">
+      <div class="sec-label" style="margin-bottom:10px">03 · Kanban Board</div>
+      <div class="slide-h" style="font-size:44px">Our task board, <span class="hl">end to end.</span></div>
+    </div>
+    <div class="a2" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+      <!-- TO DO -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--tm)"></div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--tm);font-family:var(--mono)">To Do</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px">
+            <div style="font-size:12.5px;font-weight:600;color:#e8eaf6;margin-bottom:3px">Firebase real-time integration</div>
+            <div style="font-size:11px;color:var(--tm)">Connect live data to frontend structure cards</div>
+          </div>
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px">
+            <div style="font-size:12.5px;font-weight:600;color:#e8eaf6;margin-bottom:3px">Push notifications</div>
+            <div style="font-size:11px;color:var(--tm)">Trigger alerts when selected structures fill up</div>
+          </div>
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px">
+            <div style="font-size:12.5px;font-weight:600;color:#e8eaf6;margin-bottom:3px">SDSU authentication</div>
+            <div style="font-size:11px;color:var(--tm)">Login via campus SSO or student email</div>
+          </div>
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px">
+            <div style="font-size:12.5px;font-weight:600;color:#e8eaf6;margin-bottom:3px">Map + directions integration</div>
+            <div style="font-size:11px;color:var(--tm)">Navigate to selected structure from home screen</div>
+          </div>
+        </div>
+      </div>
+      <!-- IN PROGRESS -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:#fbbf24"></div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#fbbf24;font-family:var(--mono)">In Progress</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:12px 14px">
+            <div style="font-size:12.5px;font-weight:600;color:#e8eaf6;margin-bottom:3px">API + frontend connection</div>
+            <div style="font-size:11px;color:var(--tm)">Wire Flask REST endpoints to React Native screens</div>
+          </div>
+          <div style="background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:12px 14px">
+            <div style="font-size:12.5px;font-weight:600;color:#e8eaf6;margin-bottom:3px">AsyncStorage persistence</div>
+            <div style="font-size:11px;color:var(--tm)">Persist notification preferences across sessions</div>
+          </div>
+        </div>
+      </div>
+      <!-- DONE -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:#4ade80"></div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#4ade80;font-family:var(--mono)">Done</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.18);border-radius:10px;padding:12px 14px">
+            <div style="font-size:12.5px;font-weight:600;color:#e8eaf6;margin-bottom:3px">Login screen</div>
+            <div style="font-size:11px;color:var(--tm)">Campus + community dropdowns, animated bottom sheet</div>
+          </div>
+          <div style="background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.18);border-radius:10px;padding:12px 14px">
+            <div style="font-size:12.5px;font-weight:600;color:#e8eaf6;margin-bottom:3px">Home screen</div>
+            <div style="font-size:11px;color:var(--tm)">8 structures, availability bars, status badges, report modal</div>
+          </div>
+          <div style="background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.18);border-radius:10px;padding:12px 14px">
+            <div style="font-size:12.5px;font-weight:600;color:#e8eaf6;margin-bottom:3px">Alerts + History screens</div>
+            <div style="font-size:11px;color:var(--tm)">Tabbed layout, read/unread state, session log</div>
+          </div>
+          <div style="background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.18);border-radius:10px;padding:12px 14px">
+            <div style="font-size:12.5px;font-weight:600;color:#e8eaf6;margin-bottom:3px">Settings + Legal screens</div>
+            <div style="font-size:11px;color:var(--tm)">Notification toggles, Privacy Policy, Terms of Service</div>
+          </div>
+          <div style="background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.18);border-radius:10px;padding:12px 14px">
+            <div style="font-size:12.5px;font-weight:600;color:#e8eaf6;margin-bottom:3px">Python + Flask REST API</div>
+            <div style="font-size:11px;color:var(--tm)">parkinglot.py, report.py, api.py backend complete</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 9: SYSTEM ARCHITECTURE ═══ -->
+<div class="slide" data-title="System Architecture">
+  <div class="two-col" style="align-items:flex-start">
+    <div class="col">
+      <div class="a1">
+        <div class="sec-label" style="margin-bottom:10px">04 · Architecture</div>
+        <div class="slide-h" style="font-size:44px">How the<br>system is <span class="hl">built.</span></div>
+      </div>
+      <div class="a2 slide-sub" style="font-size:14px;max-width:420px">
+        React Native + Expo for cross-platform delivery. File-based routing. All animations via the native Animated API, no third-party animation library.
+      </div>
+      <div class="a3" style="margin-top:12px;display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <span class="chip chip-p">React Native 0.76</span>
+          <span class="chip chip-p">Expo SDK 52</span>
+          <span class="chip chip-g">Expo Router v4</span>
+          <span class="chip chip-a">TypeScript</span>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+          <span class="chip chip-pu">Poppins (in-app)</span>
+          <span class="chip chip-r">Ionicons</span>
+          <span class="chip chip-p">RN Animated API</span>
+          <span class="chip chip-g">SafeAreaContext</span>
+        </div>
+      </div>
+    </div>
+    <div class="col a4">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div class="arch-box primary">
+          <div class="arch-title">React Native + Expo (iOS & Android)</div>
+          <div class="arch-sub">UI layer · Poppins · Ionicons · ImageBackground</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-box primary">
+          <div class="arch-title">Expo Router (File-Based Navigation)</div>
+          <div class="arch-sub">app/index.tsx · home · alerts · history · settings · legal</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="arch-box">
+            <div class="arch-title" style="font-size:11.5px">React Native Animated</div>
+            <div class="arch-sub" style="font-size:10px">All transitions, bottom sheets, tab pills</div>
+          </div>
+          <div class="arch-box">
+            <div class="arch-title" style="font-size:11.5px">Mock Data Layer</div>
+            <div class="arch-sub" style="font-size:10px">Static TypeScript arrays (Sprint 1–2)</div>
+          </div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-box warn">
+          <div class="arch-title" style="color:#fbbf24">Planned Backend (Sprint 3)</div>
+          <div class="arch-sub">Firebase Firestore · Firebase Auth · FCM Push Notifications</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px">
+        <div style="font-size:11.5px;color:var(--cx);line-height:1.5">The mock data layer is a <strong style="color:#e8eaf6">thin abstraction</strong>, TypeScript arrays that match the exact shape Firebase Firestore documents will use. Swap cost = one data-fetching layer.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 10: ARCHITECTURAL DRIFT ═══ -->
+<div class="slide" data-title="System Architecture">
+  <div style="display:flex;flex-direction:column;gap:18px;width:100%;max-width:1050px">
+    <div class="a1">
+      <div class="sec-label" style="margin-bottom:10px">04 · Architectural Drift</div>
+      <div class="slide-h" style="font-size:46px">What changed from<br>the <span class="hl">original design</span>, and why.</div>
+    </div>
+    <div class="a2" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="drift-card">
+        <div class="drift-from">Backend integration in Sprint 2</div>
+        <div class="drift-to">Backend deferred to Sprint 3, mock data used throughout</div>
+        <div class="drift-reason">Rationale: UX must be validated before real data introduces new variables. Deliberate, not reactive.</div>
+      </div>
+      <div class="drift-card">
+        <div class="drift-from">Tab-based navigation (bottom tab bar)</div>
+        <div class="drift-to">Stack navigation via Expo Router, header-to-screen push model</div>
+        <div class="drift-reason">Rationale: Stack navigation felt more natural for secondary screens (Alerts, History, Settings). Clean back-button affordance without persistent tab bar.</div>
+      </div>
+      <div class="drift-card">
+        <div class="drift-from">Simple modal for dropdowns on Login</div>
+        <div class="drift-to">Animated bottom-sheet with spring physics, reused in Report modal and Settings dropdowns</div>
+        <div class="drift-reason">Rationale: Peer testers found static modals abrupt. Animated sheet introduced in Sprint 1; became the standard pattern.</div>
+      </div>
+      <div class="drift-card">
+        <div class="drift-from">AsyncStorage for notification preferences</div>
+        <div class="drift-to">Local React state only, not persisted across sessions</div>
+        <div class="drift-reason">Rationale: Persistence without a backend creates sync drift. Deferred until Firebase Auth exists so prefs are tied to a user account.</div>
+      </div>
+    </div>
+    <div class="a3" style="padding:12px 18px;background:rgba(79,70,229,.08);border:1px solid rgba(79,70,229,.25);border-radius:12px">
+      <span style="font-size:11.5px;color:var(--pl);font-weight:600">Key takeaway: </span>
+      <span style="font-size:12.5px;color:var(--cx)">All four drift points were <strong style="color:#e8eaf6">deliberate trade-off decisions</strong> made in retrospectives, not unplanned scope creep. Architecture stayed coherent; the roadmap shifted to serve the UX.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 11: MVP PROGRESS ═══ -->
+<div class="slide" data-title="MVP Progress">
+  <div style="display:flex;flex-direction:column;gap:16px;width:100%;max-width:1050px">
+    <div class="a1">
+      <div class="sec-label" style="margin-bottom:10px">05 · MVP Progress</div>
+      <div class="slide-h" style="font-size:46px">What's <span class="hl">done</span>, what's next.</div>
+    </div>
+    <div class="a2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div>
+        <div style="font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--tm);font-family:var(--mono);margin-bottom:10px">Implemented</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.18);border-radius:10px">
+            <span style="font-size:12.5px;color:#e8eaf6">Login · Campus & Community selection</span>
+            <span class="status-done"><span class="dot-done"></span>Done</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.18);border-radius:10px">
+            <span style="font-size:12.5px;color:#e8eaf6">Live spot availability · 8 structures</span>
+            <span class="status-done"><span class="dot-done"></span>Done</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.18);border-radius:10px">
+            <span style="font-size:12.5px;color:#e8eaf6">Color-coded status · progress bars</span>
+            <span class="status-done"><span class="dot-done"></span>Done</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.18);border-radius:10px">
+            <span style="font-size:12.5px;color:#e8eaf6">Report modal · arrive / leave / flag</span>
+            <span class="status-done"><span class="dot-done"></span>Done</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.18);border-radius:10px">
+            <span style="font-size:12.5px;color:#e8eaf6">Alerts · Parking + Announcements tabs</span>
+            <span class="status-done"><span class="dot-done"></span>Done</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.18);border-radius:10px">
+            <span style="font-size:12.5px;color:#e8eaf6">Parking history · session tracking</span>
+            <span class="status-done"><span class="dot-done"></span>Done</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.18);border-radius:10px">
+            <span style="font-size:12.5px;color:#e8eaf6">Settings · Legal · Sign Out</span>
+            <span class="status-done"><span class="dot-done"></span>Done</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--tm);font-family:var(--mono);margin-bottom:10px">Upcoming · Sprint 3</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.18);border-radius:10px">
+            <span style="font-size:12.5px;color:#e8eaf6">Firebase real-time spot data</span>
+            <span class="status-pending"><span class="dot-pending"></span>Sprint 3</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.18);border-radius:10px">
+            <span style="font-size:12.5px;color:#e8eaf6">Push notifications (FCM)</span>
+            <span class="status-pending"><span class="dot-pending"></span>Sprint 3</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.18);border-radius:10px">
+            <span style="font-size:12.5px;color:#e8eaf6">SDSU auth · user accounts</span>
+            <span class="status-pending"><span class="dot-pending"></span>Sprint 3</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.18);border-radius:10px">
+            <span style="font-size:12.5px;color:#e8eaf6">Settings persistence (AsyncStorage)</span>
+            <span class="status-pending"><span class="dot-pending"></span>Sprint 3</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px">
+            <span style="font-size:12.5px;color:#e8eaf6">Map / directions integration</span>
+            <span class="status-future"><span class="dot-future"></span>Future</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px">
+            <span style="font-size:12.5px;color:#e8eaf6">IoT sensor integration</span>
+            <span class="status-future"><span class="dot-future"></span>Future</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px">
+            <span style="font-size:12.5px;color:#e8eaf6">Multi-campus support</span>
+            <span class="status-future"><span class="dot-future"></span>Future</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 12: LIVE DEMO ═══ -->
+<div class="slide" data-title="Live Demo">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%">
+    <div class="a1" style="text-align:center">
+      <div class="sec-label" style="margin-bottom:10px;text-align:center">05 · App Walkthrough</div>
+      <div class="slide-h" style="font-size:46px;text-align:center">Four screens. <span class="hl">One cohesive app.</span></div>
+    </div>
+    <div class="a2" style="display:flex;gap:24px;align-items:flex-start;justify-content:center">
+
+      <!-- LOGIN -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+        <div style="border-radius:38px;border:8px solid #3c3c3e;overflow:hidden;
+          box-shadow:0 0 0 1px #555,0 30px 80px rgba(0,0,0,.85),0 0 50px rgba(79,70,229,.18),inset 0 1px 0 rgba(255,255,255,.12);
+          animation:float 5s ease-in-out infinite;animation-delay:0s;flex-shrink:0;width:205px;height:425px">
+          <img src="slides-assets/Simulator Screenshot - iPhone 16e - 2026-03-24 at 16.29.22.png"
+               style="width:100%;height:100%;object-fit:cover;object-position:top;display:block">
+        </div>
+        <div style="font-size:10px;color:var(--tm);font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase">Login</div>
+      </div>
+
+      <!-- HOME -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+        <div style="border-radius:38px;border:8px solid #3c3c3e;overflow:hidden;
+          box-shadow:0 0 0 1px #555,0 30px 80px rgba(0,0,0,.85),0 0 50px rgba(79,70,229,.18),inset 0 1px 0 rgba(255,255,255,.12);
+          animation:float 5s ease-in-out infinite;animation-delay:.7s;flex-shrink:0;width:205px;height:425px">
+          <img src="slides-assets/Simulator Screenshot - iPhone 16e - 2026-03-24 at 16.29.25.png"
+               style="width:100%;height:100%;object-fit:cover;object-position:top;display:block">
+        </div>
+        <div style="font-size:10px;color:var(--tm);font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase">Home</div>
+      </div>
+
+      <!-- ALERTS -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+        <div style="border-radius:38px;border:8px solid #3c3c3e;overflow:hidden;
+          box-shadow:0 0 0 1px #555,0 30px 80px rgba(0,0,0,.85),0 0 50px rgba(79,70,229,.18),inset 0 1px 0 rgba(255,255,255,.12);
+          animation:float 5s ease-in-out infinite;animation-delay:1.4s;flex-shrink:0;width:205px;height:425px">
+          <img src="slides-assets/Simulator Screenshot - iPhone 16e - 2026-03-24 at 16.29.28.png"
+               style="width:100%;height:100%;object-fit:cover;object-position:top;display:block">
+        </div>
+        <div style="font-size:10px;color:var(--tm);font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase">Alerts</div>
+      </div>
+
+      <!-- HISTORY -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+        <div style="border-radius:38px;border:8px solid #3c3c3e;overflow:hidden;
+          box-shadow:0 0 0 1px #555,0 30px 80px rgba(0,0,0,.85),0 0 50px rgba(79,70,229,.18),inset 0 1px 0 rgba(255,255,255,.12);
+          animation:float 5s ease-in-out infinite;animation-delay:2.1s;flex-shrink:0;width:205px;height:425px">
+          <img src="slides-assets/Simulator Screenshot - iPhone 16e - 2026-03-24 at 16.29.32.png"
+               style="width:100%;height:100%;object-fit:cover;object-position:top;display:block">
+        </div>
+        <div style="font-size:10px;color:var(--tm);font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase">History</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 13: USER TESTING ═══ -->
+<div class="slide" data-title="User Testing">
+  <div style="display:flex;flex-direction:column;gap:18px;width:100%;max-width:1100px">
+    <div class="a1">
+      <div class="sec-label" style="margin-bottom:10px">06 · User Testing</div>
+      <div class="slide-h" style="font-size:44px">Testing within the team, <span class="hl">honest findings.</span></div>
+    </div>
+    <div class="a2 slide-sub" style="font-size:14.5px;max-width:700px">
+      Testing was conducted internally by team members. As daily SDSU parking users ourselves, we brought genuine context to every session: we weren't pretending to be the user, we are the user.
+    </div>
+    <div class="a3" style="display:grid;grid-template-columns:1fr 3fr;gap:16px;align-items:start">
+      <!-- LEFT: HOW -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="card" style="padding:14px 16px">
+          <div style="font-size:11px;color:var(--pl);font-weight:700;letter-spacing:.5px;margin-bottom:8px">Who Tested</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span class="chip chip-g" style="font-size:10px;width:fit-content">Carlos Gans</span>
+            <span class="chip chip-pu" style="font-size:10px;width:fit-content">Charlie McMahon</span>
+            <div style="font-size:11.5px;color:var(--cx);line-height:1.45;margin-top:4px">QA led by Charlie, with Carlos cross-testing backend behavior against frontend output.</div>
+          </div>
+        </div>
+        <div class="card" style="padding:14px 16px">
+          <div style="font-size:11px;color:var(--pl);font-weight:700;letter-spacing:.5px;margin-bottom:6px">Approach</div>
+          <div style="font-size:12px;color:var(--cx);line-height:1.5">Each tester walked through the full app flow independently, noting where they hesitated, what confused them, and what felt natural. Findings documented and triaged against the Kanban board.</div>
+        </div>
+      </div>
+      <!-- RIGHT: FINDINGS -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="obs-card" style="margin:0">
+          <div class="obs-title">What worked well: color status system</div>
+          <div class="obs-body">Green / yellow / red was understood immediately with no explanation needed. The progress bar reinforced the status without adding complexity. Both testers confirmed this was the clearest part of the UI.</div>
+          <div class="obs-change">Confirmed. No changes needed. Design decision validated.</div>
+        </div>
+        <div class="obs-card" style="margin:0">
+          <div class="obs-title">What worked well: report modal flow</div>
+          <div class="obs-body">The "I Arrived / I Left / Info looks wrong" options mapped directly to how testers naturally thought about updating parking data. The slide-up animation felt native and responsive.</div>
+          <div class="obs-change">Confirmed. Core crowd-reporting mechanic is intuitive and fast.</div>
+        </div>
+        <div class="obs-card" style="margin:0">
+          <div class="obs-title">Confusion point: report modal context</div>
+          <div class="obs-body">Testers paused on "I Arrived / I Left" without structure context. "Arrived where, exactly?" was a common hesitation: the modal didn't show which lot it was tied to.</div>
+          <div class="obs-change">Fix: Added structure name to modal header to anchor the action clearly.</div>
+        </div>
+        <div class="obs-card" style="margin:0">
+          <div class="obs-title">Usability issue: card tap expectation</div>
+          <div class="obs-body">Both testers expected tapping a parking structure card to open a map or directions, not the report modal. The primary tap action didn't match the mental model.</div>
+          <div class="obs-change">Added to Kanban To Do: primary tap opens map view; report modal moved to a secondary action.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 14: TEAM ROLES ═══ -->
+<div class="slide" data-title="Team Roles & Contributions">
+  <div style="display:flex;flex-direction:column;gap:18px;width:100%;max-width:1050px">
+    <div class="a1">
+      <div class="sec-label" style="margin-bottom:10px">07 · Team</div>
+      <div class="slide-h" style="font-size:46px">Who built <span class="hl">what.</span></div>
+    </div>
+    <div class="a2 team-grid">
+      <div class="team-card">
+        <div class="team-avatar">AM</div>
+        <div class="team-name">Amarendra Mishra</div>
+        <div class="team-role">Frontend Lead · React Native · UI/UX</div>
+        <div class="team-bullets">
+          <div class="team-bullet">Owned the entire React Native frontend: Expo Router navigation architecture, screen layout system, and shared component patterns used across the app</div>
+          <div class="team-bullet">Built all app screens: Login, Home (8 structures, status system, report modal), Alerts, History, Settings, and Legal</div>
+          <div class="team-bullet">Implemented all animations using the native Animated API: bottom-sheet dropdowns, tab pill transitions, slide-up modals</div>
+          <div class="team-bullet">Defined TypeScript mock data interfaces that bridged the frontend to the backend API contract</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:#16A34A">CG</div>
+        <div class="team-name">Carlos Gans</div>
+        <div class="team-role">Backend Lead · Python · Flask · Testing</div>
+        <div class="team-bullets">
+          <div class="team-bullet"><span style="color:#4ade80;font-weight:700">parkinglot.py</span>: data models for all parking lots, real-time availability calculations, zone management, and status tracking logic</div>
+          <div class="team-bullet"><span style="color:#4ade80;font-weight:700">report.py</span>: report generation pipeline, aggregation logic, and data structures for crowd-sourced availability updates</div>
+          <div class="team-bullet"><span style="color:#4ade80;font-weight:700">api.py</span>: main entry point: RESTful endpoints for parking data, reports, and mobile client integration</div>
+          <div class="team-bullet">Contributed to user testing: ran internal test sessions, documented usability issues found, and flagged API edge cases from real usage</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:#7C3AED">CM</div>
+        <div class="team-name">Charlie McMahon</div>
+        <div class="team-role">QA Lead · User Testing · Bug Reporting</div>
+        <div class="team-bullets">
+          <div class="team-bullet">Led all user testing sessions within the team: designed the test plan, defined tasks for each tester, and facilitated walkthroughs of every app screen</div>
+          <div class="team-bullet">Observed and documented usability issues: confusion points, unexpected tap targets, unclear labels, and friction in the report flow</div>
+          <div class="team-bullet">Captured what worked well and what needed improvement, producing a prioritized list of findings that fed directly back into the Kanban board</div>
+          <div class="team-bullet">Cross-checked frontend behavior against the backend API contract to surface inconsistencies before the demo</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:#D97706">MB</div>
+        <div class="team-name">Miguel Balderas</div>
+        <div class="team-role">Team Lead · Repo Manager · Coordination</div>
+        <div class="team-bullets">
+          <div class="team-bullet">Served as team lead throughout the project: ran check-ins, tracked progress against the Kanban board, and kept the team aligned on priorities and deadlines</div>
+          <div class="team-bullet">Owned the GitHub repository: managed branching strategy, reviewed and merged pull requests, enforced commit standards, and kept the main branch stable</div>
+          <div class="team-bullet">Coordinated between the frontend and backend workstreams to ensure the API contract and TypeScript data shapes stayed in sync</div>
+          <div class="team-bullet">Handled project documentation, milestone tracking, and prepared the team for each course checkpoint including this midterm presentation</div>
+        </div>
+      </div>
+    </div>
+    <div class="a3" style="padding:12px 18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px">
+      <span style="font-size:11px;color:var(--tm);font-weight:600">How it worked: </span>
+      <span style="font-size:12.5px;color:var(--cx)">Clear ownership, no overlap. Frontend, backend, QA, and project management each had a dedicated lead. Coordination happened through the Kanban board and lightweight team check-ins rather than formal meetings.</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- #pres -->
+
+<!-- Navigation -->
+<button class="nav-btn" id="prev">&#8592;</button>
+<button class="nav-btn" id="next">&#8594;</button>
+<div id="dots"></div>
+<div id="slide-counter"></div>
+<div class="slide-label" id="slide-label"></div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const dotsEl = document.getElementById('dots');
+const counter = document.getElementById('slide-counter');
+const labelEl = document.getElementById('slide-label');
+let cur = 0;
+
+slides.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => go(i);
+  dotsEl.appendChild(d);
+});
+
+function go(n) {
+  if (n === cur) return;
+  slides[cur].classList.remove('active');
+  slides[cur].classList.add('exit-up');
+  setTimeout(() => slides[cur].classList.remove('exit-up'), 550);
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active');
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+  counter.textContent = String(cur + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+  labelEl.textContent = slides[cur].dataset.title || '';
+}
+
+document.getElementById('next').onclick = () => go(cur + 1);
+document.getElementById('prev').onclick = () => go(cur - 1);
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') go(cur + 1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') go(cur - 1);
+});
+
+// Init
+counter.textContent = '01 / ' + String(slides.length).padStart(2, '0');
+labelEl.textContent = slides[0].dataset.title || '';
+
+// Swipe support
+let tx = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) go(dx < 0 ? cur + 1 : cur - 1);
+});
+</script>
+</body>
+</html>
